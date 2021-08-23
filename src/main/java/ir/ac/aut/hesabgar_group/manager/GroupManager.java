@@ -136,6 +136,7 @@ public class GroupManager {
                 userInfo.setJoinedGroupList(newJoinedGroup);
                 userInfoRepo.save(userInfo);
             }
+
             groupInfoRepo.delete(groupInfo);
             return "SUCCESSFULLY DELETED";
         }
