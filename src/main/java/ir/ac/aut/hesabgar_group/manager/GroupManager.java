@@ -191,7 +191,7 @@ public class GroupManager {
 
     }
 
-    public String deletingGroupMember(DeletingGroupMemberRequest deletingGroupMemberRequest) {
+    public GroupInfo deletingGroupMember(DeletingGroupMemberRequest deletingGroupMemberRequest) {
         GroupInfo groupInfo = groupInfoRepo.getGroupInfoById(deletingGroupMemberRequest.getGroupId());
         UserInfo adminUser = userInfoRepo.getUserInfoById(deletingGroupMemberRequest.getAdminId());
         UserInfo toBeDeletedUser = userInfoRepo.getUserInfoById(deletingGroupMemberRequest.getUserId());
@@ -231,10 +231,9 @@ public class GroupManager {
             }
             memberInvAndDelEvents.add(new MemberInvAndDelEvent(toBeDeletedUser.getUserName(), false, new Date()));
             groupInfo.setMemberInvAndDelEvents(memberInvAndDelEvents);
-            groupInfoRepo.save(groupInfo);
-            return "SUCCESSFULLY DELETED";
+            return groupInfoRepo.save(groupInfo);
         }
-        return "CAN'T BE DONE";
+        return null;
     }
 
     public GroupInfo addingInvoice(AddingInvoiceRequest addingInvoiceRequest) {

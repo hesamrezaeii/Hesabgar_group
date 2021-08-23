@@ -73,8 +73,11 @@ public class GroupController {
     }
 
     @PostMapping("/deletingGroupMember")
-    public String deletingGroupMember(@RequestBody DeletingGroupMemberRequest deletingGroupMemberRequest) {
-        return groupManager.deletingGroupMember(deletingGroupMemberRequest);
+    public ResponseEntity<Object> deletingGroupMember(@RequestBody DeletingGroupMemberRequest deletingGroupMemberRequest) {
+        GroupInfo groupInfo = groupManager.deletingGroupMember(deletingGroupMemberRequest);
+        if(groupInfo != null){
+            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/addInvoice")

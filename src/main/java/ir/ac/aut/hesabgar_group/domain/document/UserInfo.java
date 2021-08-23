@@ -57,7 +57,7 @@ public class UserInfo {
     private String emailAddress;
 
     @Field(BankAccounts_Col)
-    private List<BankAccount> bankAccounts;
+    private BankAccount bankAccounts;
 
     @Field(Name_Col)
     private String name;
@@ -134,11 +134,11 @@ public class UserInfo {
         this.emailAddress = emailAddress;
     }
 
-    public List<BankAccount> getBankAccounts() {
+    public BankAccount getBankAccounts() {
         return bankAccounts;
     }
 
-    public void setBankAccounts(List<BankAccount> bankAccounts) {
+    public void setBankAccounts(BankAccount bankAccounts) {
         this.bankAccounts = bankAccounts;
     }
 
