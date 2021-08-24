@@ -49,12 +49,14 @@ public class InvoiceHelper {
     }
 
     public GroupInfo findPaymentTerm(GroupInfo groupInfo, Map<String, Integer> balance) {
+//        getting members
         List<GroupMember> groupMembers = groupInfo.getMembers();
+//        getting group balance
         Map<String, Integer> groupBalance = new HashMap<>();
         for (GroupMember groupMember : groupMembers) {
             groupMember.setPaymentTerms(new ArrayList<>());
         }
-        for (String s : balance.keySet()) {
+        for (String s : groupInfo.getGroupBalance().keySet()) {
             groupBalance.put(s, groupInfo.getGroupBalance().get(s));
         }
 
