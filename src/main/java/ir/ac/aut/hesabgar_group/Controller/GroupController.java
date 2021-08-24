@@ -90,7 +90,7 @@ public class GroupController {
 
     @PostMapping("/payInvoice")
     public ResponseEntity<Object> payInvoice(@RequestBody PayingInvoiceRequest payingInvoiceRequest) {
-        GroupInfo groupInfo = groupManager.addingInvoice(payingInvoiceRequest);
+        GroupInfo groupInfo = groupManager.payingInvoice(payingInvoiceRequest);
         if(groupInfo != null){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
         } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

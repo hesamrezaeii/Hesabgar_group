@@ -214,7 +214,7 @@ public class InvoiceHelper {
         Map<String, Integer> groupBalance = groupInfo.getGroupBalance();
 
         groupBalance.put(payingInvoiceRequest.getDebtorUserId(), groupBalance.get(payingInvoiceRequest.getDebtorUserId()) + payingInvoiceRequest.getDebtAmount());
-        groupBalance.put(payingInvoiceRequest.getCreditorUserId(), groupBalance.get(payingInvoiceRequest.getCreditorUserId()) - payingInvoiceRequest.getDebtAmount())
+        groupBalance.put(payingInvoiceRequest.getCreditorUserId(), groupBalance.get(payingInvoiceRequest.getCreditorUserId()) - payingInvoiceRequest.getDebtAmount());
 
 
 
