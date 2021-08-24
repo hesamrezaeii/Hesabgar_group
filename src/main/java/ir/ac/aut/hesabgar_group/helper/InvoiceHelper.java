@@ -3,11 +3,13 @@ package ir.ac.aut.hesabgar_group.helper;
 import ir.ac.aut.hesabgar_group.domain.data.GroupMember;
 import ir.ac.aut.hesabgar_group.domain.data.PaymentTerm;
 import ir.ac.aut.hesabgar_group.domain.data.events.AddingInvoiceEvent;
+import ir.ac.aut.hesabgar_group.domain.data.events.PayingInvoiceEvent;
 import ir.ac.aut.hesabgar_group.domain.document.GroupInfo;
 import ir.ac.aut.hesabgar_group.domain.document.UserInfo;
 import ir.ac.aut.hesabgar_group.domain.repo.GroupInfoRepo;
 import ir.ac.aut.hesabgar_group.domain.repo.UserInfoRepo;
 import ir.ac.aut.hesabgar_group.request.AddingInvoiceRequest;
+import ir.ac.aut.hesabgar_group.request.PayingInvoiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -194,6 +196,36 @@ public class InvoiceHelper {
 
         return groupInfo;
     }
+
+    public GroupInfo makingNewPayingEvent(GroupInfo groupInfo, PayingInvoiceRequest payingInvoiceRequest) {
+        List<PayingInvoiceEvent> payingInvoiceEvents = groupInfo.getPayingInvoiceEvents();
+        if (payingInvoiceEvents == null) {
+            payingInvoiceEvents = new ArrayList<>();
+        }
+        PayingInvoiceEvent payingInvoiceEvent = new PayingInvoiceEvent();
+
+        payingInvoiceEvent.setDebtor(payingInvoiceRequest.getDebtorUserId());
+        payingInvoiceEvent.setCreditor(payingInvoiceRequest.getCreditorUserId());
+        payingInvoiceEvent.setDebtAmount(payingInvoiceRequest.getDebtAmount());
+        payingInvoiceEvent.setCreationDate(new Date());
+
+
+
+        Map<String, Integer> groupBalance = groupInfo.getGroupBalance();
+
+        groupBalance.put(payingInvoiceRequest.getDebtorUserId(), groupBalance.get(payingInvoiceRequest.getDebtorUserId()) + payingInvoiceRequest.getDebtAmount());
+        groupBalance.put(payingInvoiceRequest.getCreditorUserId(), groupBalance.get(payingInvoiceRequest.getCreditorUserId()) - payingInvoiceRequest.getDebtAmount())
+
+
+
+        payingInvoiceEvents.add(payingInvoiceEvent);
+
+        groupInfo.setPayingInvoiceEvents(payingInvoiceEvents);
+
+
+        return groupInfo;
+    }
+
 
     public void updateEventMembersBalance(AddingInvoiceRequest addingInvoiceRequest) {
         Map<String, Integer> groupShare = addingInvoiceRequest.getGroupShare();

@@ -88,5 +88,13 @@ public class GroupController {
         } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
+    @PostMapping("/payInvoice")
+    public ResponseEntity<Object> payInvoice(@RequestBody PayingInvoiceRequest payingInvoiceRequest) {
+        GroupInfo groupInfo = groupManager.addingInvoice(payingInvoiceRequest);
+        if(groupInfo != null){
+            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+
 
 }

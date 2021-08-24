@@ -257,4 +257,23 @@ public class GroupManager {
         }
         return null;
     }
+
+    public GroupInfo payingInvoice(PayingInvoiceRequest payingInvoiceRequest) {
+        //finding payment term and add it to groupMembers
+        GroupInfo groupInfo = groupInfoRepo.getGroupInfoById(payingInvoiceRequest.getGroupId());
+
+        //making a invoiceEvents and add it to group
+        groupInfo = invoiceHelper.makingNewPayingEvent(groupInfo, payingInvoiceRequest);
+        //making everyones balance right
+        UserInfo debtor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getDebtorUserId());
+        debtor.setOverallBalance(debtor.getOverallBalance() + payingInvoiceRequest.getDebtAmount());
+
+        UserInfo creditor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getCreditorUserId());
+        creditor.setOverallBalance(creditor.getOverallBalance() - payingInvoiceRequest.getDebtAmount());
+        //making paymentTerms
+        groupInfo = invoiceHelper.findPaymentTerm(groupInfo, new HashMap<>());
+
+        return groupInfoRepo.save(groupInfo);
+
+    }
 }
