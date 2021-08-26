@@ -2,6 +2,7 @@ package ir.ac.aut.hesabgar_group.manager;
 
 import ir.ac.aut.hesabgar_group.domain.data.GroupMember;
 import ir.ac.aut.hesabgar_group.domain.data.JoinedGroupInfo;
+import ir.ac.aut.hesabgar_group.domain.data.PaymentTerm;
 import ir.ac.aut.hesabgar_group.domain.data.events.AddingInvoiceEvent;
 import ir.ac.aut.hesabgar_group.domain.data.events.InvoiceAdminInvAndDelEvent;
 import ir.ac.aut.hesabgar_group.domain.data.events.MemberInvAndDelEvent;
@@ -291,4 +292,21 @@ public class GroupManager {
         return groupInfoRepo.save(groupInfo);
 
     }
+
+    public boolean debtorInfo(ShowDebtRequest showDebtRequest) {
+        GroupInfo groupInfo = groupInfoRepo.getGroupInfoById(showDebtRequest.getGroupId());
+        boolean debtor = false;
+        for(GroupMember groupMember: groupInfo.getMembers()){
+            if(groupMember.getUserId().equals(showDebtRequest.getUserId())){
+               for(PaymentTerm paymentTerm : groupMember.getPaymentTerms()){
+                   if(paymentTerm.getAmount() < 0){
+                       debtor = true;
+                       return debtor;
+                   }
+               }
+            }
+        }
+        return debtor;
+    }
+
 }

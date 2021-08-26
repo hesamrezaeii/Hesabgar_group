@@ -4,6 +4,7 @@ import ir.ac.aut.hesabgar_group.domain.document.GroupInfo;
 import ir.ac.aut.hesabgar_group.domain.repo.GroupInfoRepo;
 import ir.ac.aut.hesabgar_group.manager.GroupManager;
 import ir.ac.aut.hesabgar_group.request.*;
+import ir.ac.aut.hesabgar_group.response.ShowDebtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,13 +86,20 @@ public class GroupController {
        return groupManager.addingInvoice(addingInvoiceRequest);
     }
 
-    @PostMapping("/payInvoice")
+    @GetMapping("/payInvoice")
     public ResponseEntity<Object> payInvoice(@RequestBody PayingInvoiceRequest payingInvoiceRequest) {
         GroupInfo groupInfo = groupManager.payingInvoice(payingInvoiceRequest);
         if(groupInfo != null){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
         } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
+
+    @PostMapping("/showDebt")
+    public ResponseEntity<Object> debtorInfo(@RequestBody ShowDebtRequest showDebtRequest) {
+        boolean debtorInfo = groupManager.debtorInfo(showDebtRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new ShowDebtResponse(debtorInfo));
+    }
+
 
 
 }

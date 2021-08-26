@@ -27,7 +27,6 @@ public class GroupInfo {
     public final static String AddingMemberEvents_Col = "addingMemberEvents";
     public final static String InvoiceAdminInvAndDelEvent_Col = "invoiceAdminInvAndDelEvents";
     public final static String GroupBalance_Col = "groupBalance";
-
     public final static String CreationDate_Col = "creationDate";
 
     @Id
