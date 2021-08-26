@@ -24,8 +24,8 @@ public class InvoiceHelper {
     @Autowired
     private UserInfoRepo userInfoRepo;
 
-    private String findMin(Map<String, Integer> groupBalance) {
-        int min = 0;
+    private String findMin(Map<String, Float> groupBalance) {
+        float min = 0;
         String toBeReturn = null;
         for (String user : groupBalance.keySet()) {
             if (groupBalance.get(user) < min) {
@@ -37,8 +37,8 @@ public class InvoiceHelper {
         return toBeReturn;
     }
 
-    private String findMax(Map<String, Integer> groupBalance) {
-        int max = 0;
+    private String findMax(Map<String, Float> groupBalance) {
+        float max = 0;
         String toBeReturn = null;
         for (String user : groupBalance.keySet()) {
             if (groupBalance.get(user) > max) {
@@ -50,11 +50,11 @@ public class InvoiceHelper {
         return toBeReturn;
     }
 
-    public GroupInfo findPaymentTerm(GroupInfo groupInfo, Map<String, Integer> balance) {
+    public GroupInfo findPaymentTerm(GroupInfo groupInfo, Map<String, Float> balance) {
 //        getting members
         List<GroupMember> groupMembers = groupInfo.getMembers();
 //        getting group balance
-        Map<String, Integer> groupBalance = new HashMap<>();
+        Map<String, Float> groupBalance = new HashMap<>();
         for (GroupMember groupMember : groupMembers) {
             groupMember.setPaymentTerms(new ArrayList<>());
         }
@@ -79,8 +79,8 @@ public class InvoiceHelper {
                         }
                     }
 
-                    groupBalance.put(user, 0);
-                    groupBalance.put(user2, 0);
+                    groupBalance.put(user,(float) 0);
+                    groupBalance.put(user2,(float) 0);
                 }
             }
         }
@@ -88,8 +88,8 @@ public class InvoiceHelper {
             String maxDebt = findMin(groupBalance);
             String maxCred = findMax(groupBalance);
             if (groupBalance.get(maxDebt) * -1 == groupBalance.get(maxCred)) {
-                int minAmount = groupBalance.get(maxDebt);
-                int maxAmount = groupBalance.get(maxCred);
+                float minAmount = groupBalance.get(maxDebt);
+                float maxAmount = groupBalance.get(maxCred);
 
                 PaymentTerm paymentTermMaxDebt = new PaymentTerm(maxCred, groupBalance.get(maxDebt));
                 PaymentTerm paymentTermMaxCred = new PaymentTerm(maxDebt, groupBalance.get(maxCred));
@@ -107,8 +107,8 @@ public class InvoiceHelper {
                 groupBalance.put(maxCred, minAmount + maxAmount);
 
             } else if (groupBalance.get(maxDebt) * -1 > groupBalance.get(maxCred)) {
-                int minAmount = groupBalance.get(maxDebt);
-                int maxAmount = groupBalance.get(maxCred);
+                float minAmount = groupBalance.get(maxDebt);
+                float maxAmount = groupBalance.get(maxCred);
 
 
                 PaymentTerm paymentTermMaxDebt = new PaymentTerm(maxCred, maxAmount * -1);
@@ -125,11 +125,11 @@ public class InvoiceHelper {
                 }
 
                 groupBalance.put(maxDebt, minAmount + maxAmount);
-                groupBalance.put(maxCred, 0);
+                groupBalance.put(maxCred,(float) 0);
 
             } else if (groupBalance.get(maxDebt) * -1 < groupBalance.get(maxCred)) {
-                int minAmount = groupBalance.get(maxDebt);
-                int maxAmount = groupBalance.get(maxCred);
+                float minAmount = groupBalance.get(maxDebt);
+                float maxAmount = groupBalance.get(maxCred);
 
 
                 PaymentTerm paymentTermMaxDebt = new PaymentTerm(maxCred, minAmount);
@@ -144,7 +144,7 @@ public class InvoiceHelper {
                         paymentTerms.add(paymentTermMaxDebt);
                     }
                 }
-                groupBalance.put(maxDebt, 0);
+                groupBalance.put(maxDebt,(float) 0);
                 groupBalance.put(maxCred, minAmount + maxAmount);
             }
 
@@ -174,13 +174,13 @@ public class InvoiceHelper {
         }
         addingInvoiceEvent.setEventMembers(eventMembers);
 
-        Map<String, Integer> groupBalance = groupInfo.getGroupBalance();
+        Map<String, Float> groupBalance = groupInfo.getGroupBalance();
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
-            int balance = addingInvoiceRequest.getGroupShare().get(user);
+            float balance = addingInvoiceRequest.getGroupShare().get(user);
             groupBalance.put(user, balance + groupBalance.get(user));
         }
 
-        Map<String, Integer> eventBalance = new HashMap<>();
+        Map<String, Float> eventBalance = new HashMap<>();
 
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
             eventBalance.put(user, addingInvoiceRequest.getGroupShare().get(user));
@@ -211,7 +211,7 @@ public class InvoiceHelper {
 
 
 
-        Map<String, Integer> groupBalance = groupInfo.getGroupBalance();
+        Map<String, Float> groupBalance = groupInfo.getGroupBalance();
 
         groupBalance.put(payingInvoiceRequest.getDebtorUserId(), groupBalance.get(payingInvoiceRequest.getDebtorUserId()) + payingInvoiceRequest.getDebtAmount());
         groupBalance.put(payingInvoiceRequest.getCreditorUserId(), groupBalance.get(payingInvoiceRequest.getCreditorUserId()) - payingInvoiceRequest.getDebtAmount());
@@ -228,10 +228,10 @@ public class InvoiceHelper {
 
 
     public void updateEventMembersBalance(AddingInvoiceRequest addingInvoiceRequest) {
-        Map<String, Integer> groupShare = addingInvoiceRequest.getGroupShare();
+        Map<String, Float> groupShare = addingInvoiceRequest.getGroupShare();
         for (String userId : groupShare.keySet()) {
             UserInfo userInfo = userInfoRepo.getUserInfoById(userId);
-            int balance = userInfo.getOverallBalance();
+            float balance = userInfo.getOverallBalance();
             userInfo.setOverallBalance(balance + groupShare.get(userId));
             userInfoRepo.save(userInfo);
         }

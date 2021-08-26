@@ -6,7 +6,7 @@ public class PayingInvoiceRequest {
     private String groupId;
     private String debtorUserId;
     private String creditorUserId;
-    private int debtAmount;
+    private float debtAmount;
 
     public String getGroupId() {
         return groupId;
@@ -32,11 +32,11 @@ public class PayingInvoiceRequest {
         this.creditorUserId = creditorUserId;
     }
 
-    public int getDebtAmount() {
+    public float getDebtAmount() {
         return debtAmount;
     }
 
-    public void setDebtAmount(int debtAmount) {
+    public void setDebtAmount(float debtAmount) {
         this.debtAmount = debtAmount;
     }
 }

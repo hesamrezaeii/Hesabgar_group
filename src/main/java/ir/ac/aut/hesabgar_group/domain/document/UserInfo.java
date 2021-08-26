@@ -77,7 +77,7 @@ public class UserInfo {
     private List<String> friendsList;
 
     @Field(OverallBalance_Col)
-    private int overallBalance;
+    private float overallBalance;
 
 //    @Field(NewInvitedGroup_Col)
 //    private List<GroupInfo> newInvitedGroup;
@@ -174,11 +174,11 @@ public class UserInfo {
         this.joinedGroupList = joinedGroupList;
     }
 
-    public int getOverallBalance() {
+    public float getOverallBalance() {
         return overallBalance;
     }
 
-    public void setOverallBalance(int overallBalance) {
+    public void setOverallBalance(float overallBalance) {
         this.overallBalance = overallBalance;
     }
 
