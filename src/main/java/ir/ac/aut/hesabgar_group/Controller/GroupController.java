@@ -82,10 +82,7 @@ public class GroupController {
 
     @PostMapping("/addInvoice")
     public ResponseEntity<Object> getPaymentTerm(@RequestBody AddingInvoiceRequest addingInvoiceRequest) {
-        GroupInfo groupInfo = groupManager.addingInvoice(addingInvoiceRequest);
-        if(groupInfo != null){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+       return groupManager.addingInvoice(addingInvoiceRequest);
     }
 
     @PostMapping("/payInvoice")

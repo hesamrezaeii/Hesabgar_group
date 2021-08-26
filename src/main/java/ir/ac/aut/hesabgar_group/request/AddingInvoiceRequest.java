@@ -7,8 +7,17 @@ public class AddingInvoiceRequest {
     private String groupId;
     private String topic;
     private String description;
+    private int totalPaidValue;
     private Map<String, Integer> groupShare;
 
+
+    public int getTotalPaidValue() {
+        return totalPaidValue;
+    }
+
+    public void setTotalPaidValue(int totalPaidValue) {
+        this.totalPaidValue = totalPaidValue;
+    }
 
     public String getUserId() {
         return userId;

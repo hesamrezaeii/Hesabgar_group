@@ -13,6 +13,8 @@ import ir.ac.aut.hesabgar_group.domain.repo.UserInfoRepo;
 import ir.ac.aut.hesabgar_group.helper.InvoiceHelper;
 import ir.ac.aut.hesabgar_group.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -236,15 +238,30 @@ public class GroupManager {
         return null;
     }
 
-    public GroupInfo addingInvoice(AddingInvoiceRequest addingInvoiceRequest) {
+    public ResponseEntity<Object> addingInvoice(AddingInvoiceRequest addingInvoiceRequest) {
         //finding payment term and add it to groupMembers
         boolean allowed = false;
+        int invoiceAdminUserBalance = 0;
+        int sum = 0;
         GroupInfo groupInfo = groupInfoRepo.getGroupInfoById(addingInvoiceRequest.getGroupId());
         for (GroupMember groupMember : groupInfo.getMembers()) {
             if (groupMember.getUserId().equals(addingInvoiceRequest.getUserId()) && groupMember.isInvoiceAdmin()) {
                 allowed = true;
             }
         }
+        for (GroupMember groupMember : groupInfo.getMembers()) {
+            if (groupMember.getUserId().equals(addingInvoiceRequest.getUserId())) {
+                invoiceAdminUserBalance = addingInvoiceRequest.getGroupShare().get(groupMember.getUserId());
+            }
+            else {
+                sum += addingInvoiceRequest.getGroupShare().get(groupMember.getUserId());
+            }
+        }
+        if(sum * -1 != (addingInvoiceRequest.getTotalPaidValue() - invoiceAdminUserBalance)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+
         if (allowed) {
             //making a invoiceEvents and add it to group
             groupInfo = invoiceHelper.makingNewInvoiceEvent(groupInfo, addingInvoiceRequest);
@@ -253,7 +270,7 @@ public class GroupManager {
             //making paymentTerms
             groupInfo = invoiceHelper.findPaymentTerm(groupInfo, addingInvoiceRequest.getGroupShare());
 //            groupInfo = invoiceHelper.updateGroupBalance(groupInfo, addingInvoiceRequest);
-            return groupInfoRepo.save(groupInfo);
+            return ResponseEntity.status(HttpStatus.OK).body(groupInfoRepo.save(groupInfo));
         }
         return null;
     }
