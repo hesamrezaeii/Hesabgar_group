@@ -157,28 +157,28 @@ public class InvoiceHelper {
     public GroupInfo findPaymentTermAfterPay(GroupInfo groupInfo,PayingInvoiceRequest payingInvoiceRequest) {
 //        GroupInfo groupInfo1 = groupInfoRepo.getGroupInfoById(groupInfo.getId());
         List<GroupMember> groupMembers = new ArrayList<>();
-        for(GroupMember groupMember : groupInfo.getMembers()){
-            if(groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId())){
+        for (GroupMember groupMember : groupInfo.getMembers()) {
+            if (groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId())) {
                 List<PaymentTerm> paymentTerms = new ArrayList<>();
-                for(PaymentTerm paymentTerm : groupMember.getPaymentTerms()){
-                    if(!paymentTerm.getUser().equals(payingInvoiceRequest.getDebtorUserId())){
+                for (PaymentTerm paymentTerm : groupMember.getPaymentTerms()) {
+                    if (!paymentTerm.getUser().equals(payingInvoiceRequest.getDebtorUserId())) {
                         paymentTerms.add(paymentTerm);
                     }
                 }
                 groupMember.setPaymentTerms(paymentTerms);
                 groupMembers.add(groupMember);
             }
-            if(groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())){
+            if (groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())) {
                 List<PaymentTerm> paymentTerms = new ArrayList<>();
-                for(PaymentTerm paymentTerm : groupMember.getPaymentTerms()){
-                    if(!paymentTerm.getUser().equals(payingInvoiceRequest.getCreditorUserId())){
+                for (PaymentTerm paymentTerm : groupMember.getPaymentTerms()) {
+                    if (!paymentTerm.getUser().equals(payingInvoiceRequest.getCreditorUserId())) {
                         paymentTerms.add(paymentTerm);
                     }
                 }
                 groupMember.setPaymentTerms(paymentTerms);
                 groupMembers.add(groupMember);
             }
-            if(!groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId()) && !groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())) {
+            if (!groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId()) && !groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())) {
                 groupMember.setPaymentTerms(groupMember.getPaymentTerms());
                 groupMember.setUserId(groupMember.getUserId());
                 groupMember.setInvoiceAdmin(groupMember.isInvoiceAdmin());
@@ -186,6 +186,10 @@ public class InvoiceHelper {
 
             }
         }
+
+        groupInfo.setMembers(groupMembers);
+        return groupInfoRepo.save(groupInfo);
+    }
 
     public GroupInfo makingNewInvoiceEvent(GroupInfo groupInfo, AddingInvoiceRequest addingInvoiceRequest) {
         List<AddingInvoiceEvent> addingInvoiceEvents = groupInfo.getAddingInvoiceEvents();
