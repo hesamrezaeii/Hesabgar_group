@@ -261,7 +261,7 @@ public class GroupManager {
         if(sum * -1 != invoiceAdminUserBalance){
             boolean aggDebt = false;
             HashMap<String,Float> newGroupShare = new HashMap<>();
-            if( invoiceAdminUserBalance - (sum*-1) <= (float) 0.01){
+            if( invoiceAdminUserBalance - (sum*-1) <= (float) 0.1){
                 for(String s : addingInvoiceRequest.getGroupShare().keySet()){
                     if(!s.equals(addingInvoiceRequest.getUserId()) && !aggDebt){
                         newGroupShare.put(s,addingInvoiceRequest.getGroupShare().get(s) - (invoiceAdminUserBalance - (sum*-1)));
