@@ -86,7 +86,7 @@ public class GroupController {
        return groupManager.addingInvoice(addingInvoiceRequest);
     }
 
-    @GetMapping("/payInvoice")
+    @PostMapping("/payInvoice")
     public ResponseEntity<Object> payInvoice(@RequestBody PayingInvoiceRequest payingInvoiceRequest) {
         GroupInfo groupInfo = groupManager.payingInvoice(payingInvoiceRequest);
         if(groupInfo != null){
