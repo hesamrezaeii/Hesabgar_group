@@ -304,7 +304,7 @@ public class GroupManager {
         creditor.setOverallBalance(creditor.getOverallBalance() - payingInvoiceRequest.getDebtAmount());
         //making paymentTerms
 
-        groupInfo = invoiceHelper.findPaymentTermAfterPay(groupInfo, new HashMap<>());
+        groupInfo = invoiceHelper.findPaymentTermAfterPay(groupInfo, payingInvoiceRequest);
 
         return groupInfoRepo.save(groupInfo);
 

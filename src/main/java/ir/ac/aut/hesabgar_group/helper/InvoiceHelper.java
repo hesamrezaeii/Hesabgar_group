@@ -154,7 +154,7 @@ public class InvoiceHelper {
         return groupInfoRepo.save(groupInfo);
 
     }
-    public GroupInfo findPaymentTerm(GroupInfo groupInfo,PayingInvoiceRequest payingInvoiceRequest) {
+    public GroupInfo findPaymentTermAfterPay(GroupInfo groupInfo,PayingInvoiceRequest payingInvoiceRequest) {
         List<GroupMember> groupMembers = groupInfo.getMembers();
         for (GroupMember groupMember : groupMembers) {
             groupMember.setPaymentTerms(new ArrayList<>());
