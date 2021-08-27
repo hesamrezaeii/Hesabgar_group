@@ -155,10 +155,8 @@ public class InvoiceHelper {
 
     }
     public GroupInfo findPaymentTermAfterPay(GroupInfo groupInfo,PayingInvoiceRequest payingInvoiceRequest) {
-        List<GroupMember> groupMembers = groupInfo.getMembers();
-        for (GroupMember groupMember : groupMembers) {
-            groupMember.setPaymentTerms(new ArrayList<>());
-        }
+//        GroupInfo groupInfo1 = groupInfoRepo.getGroupInfoById(groupInfo.getId());
+        List<GroupMember> groupMembers = new ArrayList<>();
         for(GroupMember groupMember : groupInfo.getMembers()){
             if(groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId())){
                 List<PaymentTerm> paymentTerms = new ArrayList<>();
@@ -168,6 +166,7 @@ public class InvoiceHelper {
                     }
                 }
                 groupMember.setPaymentTerms(paymentTerms);
+                groupMembers.add(groupMember);
             }
             if(groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())){
                 List<PaymentTerm> paymentTerms = new ArrayList<>();
@@ -177,12 +176,16 @@ public class InvoiceHelper {
                     }
                 }
                 groupMember.setPaymentTerms(paymentTerms);
+                groupMembers.add(groupMember);
+            }
+            if(!groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId()) && !groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())) {
+                groupMember.setPaymentTerms(groupMember.getPaymentTerms());
+                groupMember.setUserId(groupMember.getUserId());
+                groupMember.setInvoiceAdmin(groupMember.isInvoiceAdmin());
+                groupMembers.add(groupMember);
+
             }
         }
-        groupInfo.setMembers(groupMembers);
-        return groupInfoRepo.save(groupInfo);
-
-    }
 
     public GroupInfo makingNewInvoiceEvent(GroupInfo groupInfo, AddingInvoiceRequest addingInvoiceRequest) {
         List<AddingInvoiceEvent> addingInvoiceEvents = groupInfo.getAddingInvoiceEvents();
