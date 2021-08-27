@@ -254,7 +254,7 @@ public class GroupManager {
             if (groupMember.getUserId().equals(addingInvoiceRequest.getUserId())) {
                 invoiceAdminUserBalance = addingInvoiceRequest.getGroupShare().get(groupMember.getUserId());
             }
-            else {
+            else if(addingInvoiceRequest.getGroupShare().get(groupMember.getUserId()) != null){
                 sum += addingInvoiceRequest.getGroupShare().get(groupMember.getUserId());
             }
         }
