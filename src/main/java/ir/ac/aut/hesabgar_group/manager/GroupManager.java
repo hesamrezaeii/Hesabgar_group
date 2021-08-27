@@ -299,10 +299,11 @@ public class GroupManager {
         //making everyones balance right
         UserInfo debtor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getDebtorUserId());
         debtor.setOverallBalance(debtor.getOverallBalance() + payingInvoiceRequest.getDebtAmount());
+        userInfoRepo.save(debtor);
 
         UserInfo creditor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getCreditorUserId());
         creditor.setOverallBalance(creditor.getOverallBalance() - payingInvoiceRequest.getDebtAmount());
-        //making paymentTerms
+        userInfoRepo.save(creditor);
 
         groupInfo = invoiceHelper.findPaymentTermAfterPay(groupInfo, payingInvoiceRequest);
 
