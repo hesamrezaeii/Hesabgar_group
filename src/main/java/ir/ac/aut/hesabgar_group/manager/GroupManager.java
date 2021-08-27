@@ -303,11 +303,13 @@ public class GroupManager {
         UserInfo creditor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getCreditorUserId());
         creditor.setOverallBalance(creditor.getOverallBalance() - payingInvoiceRequest.getDebtAmount());
         //making paymentTerms
-        groupInfo = invoiceHelper.findPaymentTerm(groupInfo, new HashMap<>());
+
+        groupInfo = invoiceHelper.findPaymentTermAfterPay(groupInfo, new HashMap<>());
 
         return groupInfoRepo.save(groupInfo);
 
     }
+
 
     public boolean debtorInfo(ShowDebtRequest showDebtRequest) {
         GroupInfo groupInfo = groupInfoRepo.getGroupInfoById(showDebtRequest.getGroupId());

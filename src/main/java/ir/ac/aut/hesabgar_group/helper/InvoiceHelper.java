@@ -154,6 +154,35 @@ public class InvoiceHelper {
         return groupInfoRepo.save(groupInfo);
 
     }
+    public GroupInfo findPaymentTerm(GroupInfo groupInfo,PayingInvoiceRequest payingInvoiceRequest) {
+        List<GroupMember> groupMembers = groupInfo.getMembers();
+        for (GroupMember groupMember : groupMembers) {
+            groupMember.setPaymentTerms(new ArrayList<>());
+        }
+        for(GroupMember groupMember : groupInfo.getMembers()){
+            if(groupMember.getUserId().equals(payingInvoiceRequest.getCreditorUserId())){
+                List<PaymentTerm> paymentTerms = new ArrayList<>();
+                for(PaymentTerm paymentTerm : groupMember.getPaymentTerms()){
+                    if(!paymentTerm.getUser().equals(payingInvoiceRequest.getDebtorUserId())){
+                        paymentTerms.add(paymentTerm);
+                    }
+                }
+                groupMember.setPaymentTerms(paymentTerms);
+            }
+            if(groupMember.getUserId().equals(payingInvoiceRequest.getDebtorUserId())){
+                List<PaymentTerm> paymentTerms = new ArrayList<>();
+                for(PaymentTerm paymentTerm : groupMember.getPaymentTerms()){
+                    if(!paymentTerm.getUser().equals(payingInvoiceRequest.getCreditorUserId())){
+                        paymentTerms.add(paymentTerm);
+                    }
+                }
+                groupMember.setPaymentTerms(paymentTerms);
+            }
+        }
+        groupInfo.setMembers(groupMembers);
+        return groupInfoRepo.save(groupInfo);
+
+    }
 
     public GroupInfo makingNewInvoiceEvent(GroupInfo groupInfo, AddingInvoiceRequest addingInvoiceRequest) {
         List<AddingInvoiceEvent> addingInvoiceEvents = groupInfo.getAddingInvoiceEvents();
