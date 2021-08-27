@@ -66,8 +66,8 @@ public class InvoiceHelper {
             for (String user2 : groupBalance.keySet()) {
                 if (groupBalance.get(user).equals(groupBalance.get(user2) * -1) && !user.equals(user2) && !groupBalance.get(user).equals(0)) {
 
-                    PaymentTerm paymentTermUser = new PaymentTerm(user2, groupBalance.get(user2));
-                    PaymentTerm paymentTermUser2 = new PaymentTerm(user, groupBalance.get(user));
+                    PaymentTerm paymentTermUser = new PaymentTerm(user2, groupBalance.get(user2)*-1);
+                    PaymentTerm paymentTermUser2 = new PaymentTerm(user, groupBalance.get(user2));
 
                     for (GroupMember groupMember : groupMembers) {
                         if (groupMember.getUserId().equals(user)) {
