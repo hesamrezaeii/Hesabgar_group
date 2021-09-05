@@ -26,12 +26,12 @@ public class GroupController {
 
     @PostMapping("/createGroup")
     public ResponseEntity<Object> createGroup(@RequestBody CreatingGroupRequest creatingGroupInfoRequest) {
-        GroupInfo groupInfo = groupManager.createGroup(creatingGroupInfoRequest);
         UserInfo userInfo = userInfoRepo.getUserInfoById(creatingGroupInfoRequest.getUserId());
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
         else {
+            GroupInfo groupInfo = groupManager.createGroup(creatingGroupInfoRequest);
             if (groupInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
@@ -49,12 +49,12 @@ public class GroupController {
 
     @PostMapping("/inviteToGroup")
     public ResponseEntity<Object> inviteGroup(@RequestBody InvitingToGroupRequest invitingToGroupInfoRequest) {
-        GroupInfo groupInfo = groupManager.inviteToGroup(invitingToGroupInfoRequest);
         UserInfo userInfo = userInfoRepo.getUserInfoById(invitingToGroupInfoRequest.getAdminId());
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
         else {
+            GroupInfo groupInfo = groupManager.inviteToGroup(invitingToGroupInfoRequest);
             if (groupInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
@@ -64,11 +64,11 @@ public class GroupController {
 
     @PostMapping("/deleteGroup")
     public ResponseEntity<Object> deleteGroup(@RequestBody DeletingGroupRequest deletingGroupRequest) {
-        String groupInfo = groupManager.deletingGroup(deletingGroupRequest);
         UserInfo userInfo = userInfoRepo.getUserInfoById(deletingGroupRequest.getAdminId());
         if (!userInfo.isActive()) {
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         } else {
+            String groupInfo = groupManager.deletingGroup(deletingGroupRequest);
             if (!groupInfo.equals("\"SUCCESSFULLY DELETED\"")) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
@@ -78,12 +78,13 @@ public class GroupController {
 
     @PostMapping("/makingNewInvoiceAdmin")
     public ResponseEntity<Object> makingMemberInvoiceAdmin(@RequestBody MakingMemberInvoiceAdminRequest makingMemberInvoiceAdminRequest) {
-        GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(makingMemberInvoiceAdminRequest, true);
         UserInfo userInfo = userInfoRepo.getUserInfoById(makingMemberInvoiceAdminRequest.getAdminId());
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
         else {
+            GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(makingMemberInvoiceAdminRequest, true);
+
             if (groupInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
@@ -93,16 +94,15 @@ public class GroupController {
 
     @PostMapping("/dismissalInvoiceAdmin")
     public ResponseEntity<Object> DismissalMemberFromInvoiceAdmin(@RequestBody MakingMemberInvoiceAdminRequest dismissalMemberInvoiceAdminRequest) {
-        GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(dismissalMemberInvoiceAdminRequest, false);
         UserInfo userInfo = userInfoRepo.getUserInfoById(dismissalMemberInvoiceAdminRequest.getAdminId());
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
         else {
+            GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(dismissalMemberInvoiceAdminRequest, false);
             if (groupInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -114,11 +114,11 @@ public class GroupController {
 
     @PostMapping("/deletingGroupMember")
     public ResponseEntity<Object> deletingGroupMember(@RequestBody DeletingGroupMemberRequest deletingGroupMemberRequest) {
-        GroupInfo groupInfo = groupManager.deletingGroupMember(deletingGroupMemberRequest);
         UserInfo userInfo = userInfoRepo.getUserInfoById(deletingGroupMemberRequest.getAdminId());
         if (!userInfo.isActive()) {
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         } else {
+            GroupInfo groupInfo = groupManager.deletingGroupMember(deletingGroupMemberRequest);
             if (groupInfo != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
             }
