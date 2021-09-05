@@ -19,6 +19,7 @@ public class UserInfo {
 
     public final static String Id_Col = "_id";
     public final static String IsHesabgarAdmin_Col = "role";
+    public final static String IsActive_Col = "active";
     public final static String UserName_Col = "userName";
     public final static String Password_Col = "password";
     public final static String Email_Col = "emailAddress";
@@ -43,6 +44,9 @@ public class UserInfo {
     @Field(IsHesabgarAdmin_Col)
     private boolean isAdmin;
 
+    @Field(IsActive_Col)
+    private boolean isActive;
+
     @Field(UserName_Col)
     @Indexed(unique = true)
     @NonNull
@@ -57,7 +61,7 @@ public class UserInfo {
     private String emailAddress;
 
     @Field(BankAccounts_Col)
-    private BankAccount bankAccounts;
+    private BankAccount bankAccount;
 
     @Field(Name_Col)
     private String name;
@@ -110,6 +114,14 @@ public class UserInfo {
         isAdmin = admin;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -134,12 +146,12 @@ public class UserInfo {
         this.emailAddress = emailAddress;
     }
 
-    public BankAccount getBankAccounts() {
-        return bankAccounts;
+    public BankAccount getBankAccount() {
+        return bankAccount;
     }
 
-    public void setBankAccounts(BankAccount bankAccounts) {
-        this.bankAccounts = bankAccounts;
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
     public String getName() {
@@ -189,4 +201,5 @@ public class UserInfo {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
+
 }

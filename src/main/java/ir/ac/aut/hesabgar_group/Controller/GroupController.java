@@ -1,7 +1,9 @@
 package ir.ac.aut.hesabgar_group.Controller;
 
 import ir.ac.aut.hesabgar_group.domain.document.GroupInfo;
+import ir.ac.aut.hesabgar_group.domain.document.UserInfo;
 import ir.ac.aut.hesabgar_group.domain.repo.GroupInfoRepo;
+import ir.ac.aut.hesabgar_group.domain.repo.UserInfoRepo;
 import ir.ac.aut.hesabgar_group.manager.GroupManager;
 import ir.ac.aut.hesabgar_group.request.*;
 import ir.ac.aut.hesabgar_group.response.ShowDebtResponse;
@@ -18,14 +20,21 @@ public class GroupController {
     private GroupManager groupManager;
     @Autowired
     private GroupInfoRepo groupInfoRepo;
+    @Autowired
+    private UserInfoRepo userInfoRepo;
 
 
     @PostMapping("/createGroup")
     public ResponseEntity<Object> createGroup(@RequestBody CreatingGroupRequest creatingGroupInfoRequest) {
         GroupInfo groupInfo = groupManager.createGroup(creatingGroupInfoRequest);
+        UserInfo userInfo = userInfoRepo.getUserInfoById(creatingGroupInfoRequest.getUserId());
+        if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
         if(groupInfo != null){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @GetMapping("/getGroup/{groupId}")
@@ -39,14 +48,23 @@ public class GroupController {
     @PostMapping("/inviteToGroup")
     public ResponseEntity<Object> inviteGroup(@RequestBody InvitingToGroupRequest invitingToGroupInfoRequest) {
         GroupInfo groupInfo = groupManager.inviteToGroup(invitingToGroupInfoRequest);
+        UserInfo userInfo = userInfoRepo.getUserInfoById(invitingToGroupInfoRequest.getAdminId());
+        if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
         if(groupInfo != null){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/deleteGroup")
     public ResponseEntity<Object> deleteGroup(@RequestBody DeletingGroupRequest deletingGroupRequest) {
         String groupInfo = groupManager.deletingGroup(deletingGroupRequest);
+        UserInfo userInfo = userInfoRepo.getUserInfoById(deletingGroupRequest.getAdminId());
+        if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
         if(!groupInfo.equals("\"SUCCESSFULLY DELETED\"")){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
         } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -55,17 +73,27 @@ public class GroupController {
     @PostMapping("/makingNewInvoiceAdmin")
     public ResponseEntity<Object> makingMemberInvoiceAdmin(@RequestBody MakingMemberInvoiceAdminRequest makingMemberInvoiceAdminRequest) {
         GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(makingMemberInvoiceAdminRequest, true);
-        if(groupInfo != null){
+        UserInfo userInfo = userInfoRepo.getUserInfoById(makingMemberInvoiceAdminRequest.getAdminId());
+        if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
+        if(groupInfo != null) {
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/dismissalInvoiceAdmin")
     public ResponseEntity<Object> DismissalMemberFromInvoiceAdmin(@RequestBody MakingMemberInvoiceAdminRequest dismissalMemberInvoiceAdminRequest) {
         GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(dismissalMemberInvoiceAdminRequest, false);
+        UserInfo userInfo = userInfoRepo.getUserInfoById(dismissalMemberInvoiceAdminRequest.getAdminId());
         if(groupInfo != null){
             return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        else if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @DeleteMapping("/deleteAll")
@@ -83,6 +111,10 @@ public class GroupController {
 
     @PostMapping("/addInvoice")
     public ResponseEntity<Object> getPaymentTerm(@RequestBody AddingInvoiceRequest addingInvoiceRequest) {
+        UserInfo userInfo = userInfoRepo.getUserInfoById(addingInvoiceRequest.getUserId());
+        if (!userInfo.isActive()){
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        }
        return groupManager.addingInvoice(addingInvoiceRequest);
     }
 
