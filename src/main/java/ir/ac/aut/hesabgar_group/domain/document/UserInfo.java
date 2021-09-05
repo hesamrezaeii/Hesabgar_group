@@ -4,6 +4,7 @@ package ir.ac.aut.hesabgar_group.domain.document;
 import com.mongodb.lang.NonNull;
 import ir.ac.aut.hesabgar_group.domain.data.BankAccount;
 import ir.ac.aut.hesabgar_group.domain.data.JoinedGroupInfo;
+import ir.ac.aut.hesabgar_group.domain.data.UserReportStatus;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -28,6 +29,7 @@ public class UserInfo {
     public final static String LastName_Col = "lastName";
     public final static String TelephoneNumber_Col = "telephoneNumber";
     public final static String BankAccounts_Col = "bankAccount";
+    public final static String ReportList_Col = "reportList";
 
 
     public final static String JoinedGroupList_Col = "joinedGroupList";
@@ -44,7 +46,7 @@ public class UserInfo {
     @Field(IsHesabgarAdmin_Col)
     private boolean isAdmin;
 
-    @Field(IsActive_Col)
+    @Field(Password_Col)
     private boolean isActive;
 
     @Field(UserName_Col)
@@ -52,7 +54,7 @@ public class UserInfo {
     @NonNull
     private String userName;
 
-    @Field(Password_Col)
+    @Field(IsActive_Col)
     private String password;
 
     @Field(Email_Col)
@@ -62,6 +64,9 @@ public class UserInfo {
 
     @Field(BankAccounts_Col)
     private BankAccount bankAccount;
+
+    @Field(ReportList_Col)
+    private UserReportStatus userReportStatus;
 
     @Field(Name_Col)
     private String name;
@@ -116,6 +121,14 @@ public class UserInfo {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public UserReportStatus getUserReportStatus() {
+        return userReportStatus;
+    }
+
+    public void setUserReportStatus(UserReportStatus userReportStatus) {
+        this.userReportStatus = userReportStatus;
     }
 
     public void setActive(boolean active) {
