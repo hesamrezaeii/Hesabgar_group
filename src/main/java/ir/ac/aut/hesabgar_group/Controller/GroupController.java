@@ -31,10 +31,12 @@ public class GroupController {
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
-        if(groupInfo != null){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+        else {
+            if (groupInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @GetMapping("/getGroup/{groupId}")
@@ -52,22 +54,26 @@ public class GroupController {
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
-        if(groupInfo != null){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+        else {
+            if (groupInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/deleteGroup")
     public ResponseEntity<Object> deleteGroup(@RequestBody DeletingGroupRequest deletingGroupRequest) {
         String groupInfo = groupManager.deletingGroup(deletingGroupRequest);
         UserInfo userInfo = userInfoRepo.getUserInfoById(deletingGroupRequest.getAdminId());
-        if (!userInfo.isActive()){
+        if (!userInfo.isActive()) {
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        } else {
+            if (!groupInfo.equals("\"SUCCESSFULLY DELETED\"")) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        if(!groupInfo.equals("\"SUCCESSFULLY DELETED\"")){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/makingNewInvoiceAdmin")
@@ -77,23 +83,28 @@ public class GroupController {
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
-        if(groupInfo != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+        else {
+            if (groupInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("/dismissalInvoiceAdmin")
     public ResponseEntity<Object> DismissalMemberFromInvoiceAdmin(@RequestBody MakingMemberInvoiceAdminRequest dismissalMemberInvoiceAdminRequest) {
         GroupInfo groupInfo = groupManager.makingMemberInvoiceAdmin(dismissalMemberInvoiceAdminRequest, false);
         UserInfo userInfo = userInfoRepo.getUserInfoById(dismissalMemberInvoiceAdminRequest.getAdminId());
-        if(groupInfo != null){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        }
-        else if (!userInfo.isActive()){
+        if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        else {
+            if (groupInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @DeleteMapping("/deleteAll")
@@ -104,9 +115,15 @@ public class GroupController {
     @PostMapping("/deletingGroupMember")
     public ResponseEntity<Object> deletingGroupMember(@RequestBody DeletingGroupMemberRequest deletingGroupMemberRequest) {
         GroupInfo groupInfo = groupManager.deletingGroupMember(deletingGroupMemberRequest);
-        if(groupInfo != null){
-            return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
-        } return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        UserInfo userInfo = userInfoRepo.getUserInfoById(deletingGroupMemberRequest.getAdminId());
+        if (!userInfo.isActive()) {
+            return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
+        } else {
+            if (groupInfo != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(groupInfo);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @PostMapping("/addInvoice")
@@ -115,7 +132,9 @@ public class GroupController {
         if (!userInfo.isActive()){
             return ResponseEntity.status(HttpStatus.LOCKED).body(userInfo);
         }
-       return groupManager.addingInvoice(addingInvoiceRequest);
+        else {
+            return groupManager.addingInvoice(addingInvoiceRequest);
+        }
     }
 
     @PostMapping("/payInvoice")
