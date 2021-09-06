@@ -197,23 +197,26 @@ public class InvoiceHelper {
             addingInvoiceEvents = new ArrayList<>();
         }
         AddingInvoiceEvent addingInvoiceEvent = new AddingInvoiceEvent();
-
-        addingInvoiceEvent.setInvoiceAdmin(addingInvoiceRequest.getUserId());
+        UserInfo inoiceAdmin = userInfoRepo.getUserInfoById(addingInvoiceRequest.getUserId());
+        addingInvoiceEvent.setInvoiceAdmin(inoiceAdmin.getUserName());
 
         addingInvoiceEvent.setTopic(addingInvoiceRequest.getTopic());
         addingInvoiceEvent.setDescription(addingInvoiceRequest.getDescription());
 
 
         List<String> eventMembers = new ArrayList<>();
+        UserInfo userInfo = new UserInfo();
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
-            eventMembers.add(user);
+            userInfo = userInfoRepo.getUserInfoById(user);
+            eventMembers.add(userInfo.getUserName());
         }
         addingInvoiceEvent.setEventMembers(eventMembers);
 
         Map<String, Float> groupBalance = groupInfo.getGroupBalance();
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
             float balance = addingInvoiceRequest.getGroupShare().get(user);
-            groupBalance.put(user, balance + groupBalance.get(user));
+            userInfo = userInfoRepo.getUserInfoById(user);
+            groupBalance.put(userInfo.getUserName(), balance + groupBalance.get(user));
         }
 
         Map<String, Float> eventBalance = new HashMap<>();
@@ -238,10 +241,12 @@ public class InvoiceHelper {
         if (payingInvoiceEvents == null) {
             payingInvoiceEvents = new ArrayList<>();
         }
-        PayingInvoiceEvent payingInvoiceEvent = new PayingInvoiceEvent();
+        UserInfo debtor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getDebtorUserId());
+        UserInfo creditor = userInfoRepo.getUserInfoById(payingInvoiceRequest.getCreditorUserId());
 
-        payingInvoiceEvent.setDebtor(payingInvoiceRequest.getDebtorUserId());
-        payingInvoiceEvent.setCreditor(payingInvoiceRequest.getCreditorUserId());
+        PayingInvoiceEvent payingInvoiceEvent = new PayingInvoiceEvent();
+        payingInvoiceEvent.setDebtor(debtor.getUserName());
+        payingInvoiceEvent.setCreditor(creditor.getUserName());
         payingInvoiceEvent.setDebtAmount(payingInvoiceRequest.getDebtAmount());
         payingInvoiceEvent.setCreationDate(new Date());
 
