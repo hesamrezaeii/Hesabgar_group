@@ -215,14 +215,14 @@ public class InvoiceHelper {
         Map<String, Float> groupBalance = groupInfo.getGroupBalance();
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
             float balance = addingInvoiceRequest.getGroupShare().get(user);
-            userInfo = userInfoRepo.getUserInfoById(user);
-            groupBalance.put(userInfo.getUserName(), balance + groupBalance.get(user));
+            groupBalance.put(user, balance + groupBalance.get(user));
         }
 
         Map<String, Float> eventBalance = new HashMap<>();
 
         for (String user : addingInvoiceRequest.getGroupShare().keySet()) {
-            eventBalance.put(user, addingInvoiceRequest.getGroupShare().get(user));
+            userInfo = userInfoRepo.getUserInfoById(user);
+            eventBalance.put(userInfo.getUserName(), addingInvoiceRequest.getGroupShare().get(user));
         }
         addingInvoiceEvent.setEventBalance(eventBalance);
 
